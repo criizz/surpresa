@@ -16,7 +16,6 @@
       font-family: 'Georgia', serif;
       color: #f8e8b8;
       text-align: center;
-
       background-image:
         linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1024px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg');
@@ -83,8 +82,19 @@
       100% { transform: scale(1); }
     }
 
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .gallery {
-      margin-top: 0; /* ajustado para remover espaço extra */
+      margin-top: 0;
       display: none;
       flex-wrap: wrap;
       justify-content: center;
@@ -95,25 +105,27 @@
       width: 755px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(255, 255, 204, 0.4);
-      transition: transform 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
 
-    .gallery img:hover {
-      transform: scale(1.05);
+    .fade-in {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
     }
   </style>
 </head>
 <body>
   <h1 id="mainTitle">Seja bem vinda, Gabriella Maia! Para seguir, aperte o coração.</h1>
 
-  <svg class="heart" id="startHeart" viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg">
+  <svg class="heart" id="startHeart" viewBox="0 0 32 29.6" xmlns="http://www.w3.org/2000/svg" aria-label="Clique para começar">
     <path d="M23.6,0c-3.4,0-6.4,2.2-7.6,5.3C14.8,2.2,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4
              c0,9.3,16,21.2,16,21.2s16-11.9,16-21.2C32,3.8,28.2,0,23.6,0z"/>
   </svg>
 
   <div class="message typing-cursor" id="message"></div>
 
-  <!-- Novo título que aparecerá antes da galeria -->
   <h2 class="subtitle" id="galleryTitle" style="display:none;">Alguns dos nossos momentos</h2>
 
   <div class="gallery" id="gallery">
@@ -137,7 +149,6 @@
     const gallery = document.getElementById("gallery");
     const galleryTitle = document.getElementById("galleryTitle");
     const mainTitle = document.getElementById("mainTitle");
-    // Música removida
 
     let index = 0;
 
@@ -148,8 +159,16 @@
         setTimeout(typeWriter, 25);
       } else {
         messageEl.classList.remove('typing-cursor');
-        galleryTitle.style.display = 'block';  // mostra o título
-        gallery.style.display = 'flex';         // mostra a galeria
+        galleryTitle.style.display = 'block';
+        gallery.style.display = 'flex';
+
+        // Animação com delay para cada imagem
+        const images = gallery.querySelectorAll('img');
+        images.forEach((img, i) => {
+          setTimeout(() => {
+            img.classList.add('fade-in');
+          }, i * 100); // delay de 100ms por imagem
+        });
       }
     }
 
@@ -157,7 +176,6 @@
       mainTitle.textContent = "Feliz Dia dos Namorados";
       startHeart.style.display = 'none';
       messageEl.style.display = 'block';
-      // música removida
       typeWriter();
     });
   </script>
